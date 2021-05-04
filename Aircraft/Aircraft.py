@@ -1,9 +1,12 @@
 import numpy as np
 import json
+import Engine
 
 class Aircraft:
     def __init__(self, data_dict):
         self.data_dict = data_dict
+        self.forward_engine = None
+        self.rear_engine = None
 
     @classmethod
     def fromjsonfile(cls, json_file="aircraft_data.json"):
@@ -15,6 +18,12 @@ class Aircraft:
         with open(json_file) as f:
             data_dict = json.load(f)
         return cls(data_dict)
+
+    def add_forward_engine(self, engine:Engine):
+        self.forward_engine = engine
+
+    def add_rear_engine(self, engine:Engine):
+        self.rear_engine = engine
 
     @staticmethod
     def comp_drag(velocity, Cd, surface_area, density=1.225):
