@@ -1,5 +1,5 @@
 import unittest
-from Aircraft.Aircraft import Aircraft
+from Skymaster.aircraft import Aircraft
 import os
 
 class TestJson(unittest.TestCase):

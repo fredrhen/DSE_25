@@ -1,16 +1,20 @@
 {
-  "Aircarft Details": {
+  "Aircraft Details": {
     "aspect ratio": "7.18",
     "wingspan": "11.63",
     "dihedral": "3",
     "oswald efficiency": "0.8",
     "top speed 1": {
       "weight": "4630",
-      "speed" : "199"
+      "speed" : "199",
+      "rho" : "1.225",
+      "power%" : "1"
     },
     "top speed 2": {
       "weight": "4200",
-      "speed" : "200"
+      "speed" : "200",
+      "rho" : "1.225",
+      "power%" : "1"
     }
   }
 }
