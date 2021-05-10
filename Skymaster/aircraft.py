@@ -2,7 +2,10 @@ import numpy as np
 import json
 from Skymaster.engine import Engine
 
+g_const = 9.80665
+
 class Aircraft:
+
     def __init__(self, data_dict):
         self.data_dict = data_dict
         self.forward_engine = None
@@ -28,12 +31,21 @@ class Aircraft:
     def get_CD0(self, key):
         V = self.MPH_to_MS(float(self.data_dict[key]["speed"]))
         W = self.lbs_to_N(float(self.data_dict[key]["weight"]))
+        p_set = float(self.data_dict[key]["power%"])
         rho = float(self.data_dict[key]["rho"])
 
+
+        T = 0
+        T += self.forward_engine.get_thrust(p_set, V, rho)
+        T += self.rear_engine.get_thrust(p_set, V, rho)
+
+
         S = self.comp_S(float(self.data_dict["wingspan"]), float(self.data_dict['aspect ratio']))
-        CL = self.comp_CL(W, rho, V, S)
+        CL = self.comp_CL_EOM(W, rho, V, S)
+        print(f'CL = {CL} ')
         CD = self.comp_CD_EOM(T, rho, V, S)
-        return self.comp_CD0(CL, float(self.data_dict["Aspect Ratio"]), float(self.data_dict['oswald efficiency']), CD)
+        print(f'CD = {CD} ')
+        return self.comp_CD0(CL, float(self.data_dict["aspect ratio"]), float(self.data_dict['oswald efficiency']), CD)
 
     @staticmethod
     def comp_CD0(CL, A, e, CD):
@@ -48,16 +60,16 @@ class Aircraft:
         return CD - CL**2 / (np.pi*A*e)
 
     @staticmethod
-    def comp_CL(W, rho, V, S):
+    def comp_CL_EOM(W, rho, V, S):
         '''
         Computes the CL
-        :param W: Weight [Kg]
+        :param W: Weight [N]
         :param rho: Density [kg/m^3]
         :param V: Velocity [m/s]
         :param S: Surface area of wing [m^2]
         :return: Coefficient of Lift []
         '''
-        return 2 * W / (rho * V**2 * S)
+        return 2 * (W ) / (rho * V**2 * S)
 
     @staticmethod
     def comp_S(b, A):
@@ -95,7 +107,7 @@ class Aircraft:
 
     @staticmethod
     def lbs_to_N(lbs):
-        return lbs *  4.44822
+        return lbs * 4.44822
 
 
 
